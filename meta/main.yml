@@ -1,0 +1,12 @@
+---
+galaxy_info:
+  author: FlatKey
+  description: Base role for firewalld
+  license: MIT
+  min_ansible_version: 1.9
+  platforms:
+    - name: EL
+      versions:
+        - 7
+  categories:
+    - system

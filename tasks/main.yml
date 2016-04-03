@@ -1,0 +1,24 @@
+---
+- name: ensure firewalld is installed
+  yum: name=firewalld state=present
+
+- name: ensure firewalld is enabled and started
+  service: name=firewalld enabled=yes state=started
+
+- name: set firewalld default zone
+  command: /bin/firewall-cmd --set-default-zone={{default_zone}}
+  register: result
+  changed_when: result.stdout == "success"
+
+- name: set firewalld interface zones
+  command: /bin/firewall-cmd --change-interface={{item.key}} --zone={{item.value}} --permanent
+  with_dict: firewalld_interface_zones
+  notify: restart firewalld
+
+- name: set firewalld service rules
+  firewalld: service={{item.key}} permanent={{item.value.permanent|default('true')}} immediate={{item.value.immediate|default('true')}} state={{item.value.state|default('enabled')}} zone={{item.value.zone|default('public')}}
+  with_dict: firewalld_service_rules
+
+- name: set firewalld port rules
+  firewalld: port={{item.value.port}}/{{item.value.protocol|default('tcp')}} permanent={{item.value.permanent|default('true')}} immediate={{item.value.immediate|default('true')}} state={{item.value.state|default('enabled')}} zone={{item.value.zone|default('public')}}
+  with_dict: firewalld_port_rules
