@@ -12,8 +12,12 @@
 
 - name: set firewalld zone interface
   command: /bin/firewall-cmd --change-interface={{item.key}} --zone={{item.value}} --permanent
-  with_dict: firewalld_interface_zones
+  with_dict: firewalld_zone_interface
   notify: restart firewalld
+
+- name: set firewalld zone source
+  firewalld: service={{item.key}} permanent={{item.value.permanent|default('true')}} immediate={{item.value.immediate|default('true')}} state={{item.value.state|default('enabled')}} zone={{item.value.zone|default('public')}}
+  with_dict: firewalld_service_rules
 
 - name: set firewalld service rules
   firewalld: service={{item.key}} permanent={{item.value.permanent|default('true')}} immediate={{item.value.immediate|default('true')}} state={{item.value.state|default('enabled')}} zone={{item.value.zone|default('public')}}

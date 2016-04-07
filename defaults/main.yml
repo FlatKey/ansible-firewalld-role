@@ -1,4 +1,4 @@
 ---
 default_zone: dmz
-firewalld_interface_zones:
+firewalld_zone_interface:
   eth0: public

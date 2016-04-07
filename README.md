@@ -25,17 +25,17 @@ For example the default is to set the public zone as default:
     default_zone: public
 ```
 
-The following variables are used to define the zone of an interface:
+The following variables are used to define the interface of a zone:
 
 ```
-    firewalld_interface_zones:
+    firewalld_zone_interface:
       eth0: (optional, default: public for eth0)
 ```
 
-For example the default is to set the public zone as default for the eth0 interface: 
+For example the default is to set eth0 as default for the public zone: 
 
 ```
-    firewalld_interface_zones:
+    firewalld_zone_interface:
       eth0: public
 ```
 
@@ -74,7 +74,7 @@ The following variables are used to define a port rule:
         immediate: (optional, default: true)
 ```
 
-For example the default is to allow SSH on the public interface: 
+For example the default is to allow SSH on the public zone: 
 
 ```
     firewalld_port_rules: 
@@ -107,7 +107,7 @@ Example with all parameters:
         - ansible-firewalld-role
       vars:
         default_zone: public
-        firewalld_interface_zones:
+        firewalld__zone_interface:
           eth0: public
           eth1: internal
         firewalld_service_rules:
@@ -135,7 +135,7 @@ Example without optional parameters:
       roles:
         - ansible-firewalld-role
       vars:
-        firewalld_interface_zones:
+        firewalld_zone_interface:
           eth1: internal
         firewalld_service_rules:
           ssh:
