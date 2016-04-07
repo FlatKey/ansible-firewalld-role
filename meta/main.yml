@@ -1,12 +1,22 @@
 ---
 galaxy_info:
   author: FlatKey
-  description: Base role for firewalld
+  description: Base role to configure firewalld
   license: MIT
   min_ansible_version: 1.9
   platforms:
     - name: EL
       versions:
         - 7
-  categories:
+  galaxy_tags:
+    - firewalld
+    - firewall
     - system
+    - networking
+    - network
+    - security
+    - centos
+    - centos7
+    - rhel
+    - rhel7
+dependencies:
