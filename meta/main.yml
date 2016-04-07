@@ -19,4 +19,4 @@ galaxy_info:
     - centos7
     - rhel
     - rhel7
-dependencies:
+dependencies: []
