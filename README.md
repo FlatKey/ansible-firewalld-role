@@ -29,14 +29,28 @@ The following variables are used to define the interface of a zone:
 
 ```
     firewalld_zone_interface:
-      eth0: (optional, default: public for eth0)
+      public:
 ```
 
-For example the default is to set eth0 as default for the public zone: 
+For example the default is to set eth0 for the public zone: 
 
 ```
     firewalld_zone_interface:
-      eth0: public
+      public: eth0
+```
+
+The following variables are used to define the source of a zone:
+
+```
+    firewalld_zone_source:
+      public:
+```
+
+For example to set the Network 192.168.1.0/24 for the public zone: 
+
+```
+    firewalld_zone_source:
+      public: "192.168.1.0/24"
 ```
 
 The following variables are used to define a service rule: 
