@@ -11,7 +11,7 @@
   changed_when: result.stdout == "success"
 
 - name: set firewalld zone interface
-  command: /bin/firewall-cmd --change-interface={{item.key}} --zone={{item.value}} --permanent
+  command: /bin/firewall-cmd --zone={{item.key}} --change-interface={{item.value}} --permanent
   with_dict: firewalld_zone_interface
   notify: restart firewalld
 
