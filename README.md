@@ -8,7 +8,7 @@ Requirements
 
 Tested on RHEL 7 and CentOS 7 only. 
 
-Ansible 1.9 or above 
+Ansible 2.0 or above 
 
 Role Variables
 --------------
@@ -126,8 +126,14 @@ Example with all parameters:
       vars:
         default_zone: public
         firewalld__zone_interface:
-          eth0: public
-          eth1: internal
+          public: eth0
+          internal: eth1
+        firewalld_zone_source:
+          trusted:
+            source: "192.168.1.0/24"
+            state: enabled
+            permanent: true
+            immediate: true
         firewalld_service_rules:
           ssh:
             state: enabled
@@ -154,7 +160,10 @@ Example without optional parameters:
         - ansible-firewalld-role
       vars:
         firewalld_zone_interface:
-          eth1: internal
+          internal: eth1
+        firewalld_zone_source:
+          trusted:
+            source: "192.168.1.0/24"
         firewalld_service_rules:
           ssh:
         firewalld_port_rules:
