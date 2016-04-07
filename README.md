@@ -50,7 +50,11 @@ For example to set the Network 192.168.1.0/24 for the public zone:
 
 ```
     firewalld_zone_source:
-      public: "192.168.1.0/24"
+      public:
+        source: "192.168.1.0/24"
+        state: (optional, default: enabled)
+        permanent: (optional, default: true)
+        immediate: (optional, default: true)
 ```
 
 The following variables are used to define a service rule: 
