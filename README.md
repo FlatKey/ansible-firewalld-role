@@ -20,6 +20,8 @@ Ansible 2.0 or above
 
 Role Variables
 --------------
+**It is not necessary to use all these variable blocks, you can use only the config options you really need.** 
+
 
 The following variable is used to define the default zone of firewalld:
 
