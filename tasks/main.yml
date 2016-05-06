@@ -26,3 +26,7 @@
 - name: set firewalld port rules
   firewalld: port={{item.value.port}}/{{item.value.protocol|default('tcp')}} permanent={{item.value.permanent|default('true')}} immediate={{item.value.immediate|default('true')}} state={{item.value.state|default('enabled')}} zone={{item.value.zone|default('public')}}
   with_dict: "{{firewalld_port_rules|default({})}}"
+
+- name: set firewalld rich rules
+  firewalld: rich_rule={{item.value.rule}} permanent={{item.value.permanent|default('true')}} immediate={{item.value.immediate|default('true')}} state={{item.value.state|default('enabled')}} zone={{item.value.zone|default('public')}}
+  with_dict: "{{firewalld_rich_rules|default({})}}"
