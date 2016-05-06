@@ -1,7 +1,7 @@
 ---
 galaxy_info:
   author: FlatKey
-  description: Advanced Base role to configure firewalld through variables. You can configure the default zone, interface of a zone, source of a zone, service rules, port rules and rich rules.
+  description: firewalld configuration through variables
   license: MIT
   min_ansible_version: 2.0
   platforms:
