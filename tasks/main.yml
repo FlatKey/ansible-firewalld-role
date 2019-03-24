@@ -7,9 +7,16 @@
   service: name=firewalld enabled=yes state=started
   tags: firewalld
 
+- name: get actual firewalld default zone
+  command: /bin/firewall-cmd --get-default-zone
+  register: defaultzone
+  changed_when: false
+  tags: firewalld
+
 - name: set firewalld default zone
   command: /bin/firewall-cmd --set-default-zone={{ default_zone|default('public') }}
   register: result
+  when: defaultzone.stdout != default_zone
   changed_when: result.stdout == "success"
   tags: firewalld
 
