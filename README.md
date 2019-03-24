@@ -112,7 +112,7 @@ Example Playbook
         - ansible-firewalld-role
       vars:
         default_zone: public
-        firewalld__zone_interface:
+        firewalld_zone_interface:
           public: eth0
           internal: eth1
         firewalld_zone_source:
