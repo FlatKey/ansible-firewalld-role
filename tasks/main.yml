@@ -21,8 +21,10 @@
   tags: firewalld
 
 - name: set firewalld zone interface
-  command: /bin/firewall-cmd --zone={{ item.key }} --add-interface={{ item.value }} --permanent
+  shell: if [[ "$(/bin/firewall-cmd --get-zone-of-interface=enp4s0)" != "public" ]]; then /bin/firewall-cmd --zone={{ item.key }} --add-interface={{ item.value }} --permanent && echo "changed"; fi
   with_dict: "{{ firewalld_zone_interface|default({}) }}"
+  register: shell_result
+  changed_when: shell_result.stdout | join('') is search('changed')
   notify: restart firewalld
   tags: firewalld
 
