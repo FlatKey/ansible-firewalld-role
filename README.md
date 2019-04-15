@@ -31,7 +31,7 @@ The following variable is used to define the default zone of firewalld:
 
 ---
 
-The following variables are used to define the interface of a zone:
+The following variables are used to define the interface of a zone (multiple interfaces per zone possible, one interface per line):
 
 ```
     firewalld_zone_interface:
@@ -115,6 +115,7 @@ Example Playbook
         firewalld_zone_interface:
           public: eth0
           internal: eth1
+          internal: eth2
         firewalld_zone_source:
           trusted:
             source: "192.168.1.0/24"
