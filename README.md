@@ -14,7 +14,7 @@ Config options:
 Requirements
 ------------
 
-Tested on RHEL 7 and CentOS 7 only. 
+Tested on RHEL 7, CentOS 7 and Fedora 29 only. 
 
 Ansible 2.0 or above 
 
