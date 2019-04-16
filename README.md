@@ -151,6 +151,7 @@ Example Playbook
             zone: public
             permanent: true
             immediate: true
+        firewalld_purge_services: true
 ```
 
 License
