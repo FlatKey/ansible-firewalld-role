@@ -5,9 +5,15 @@ galaxy_info:
   license: MIT
   min_ansible_version: 2.0
   platforms:
-    - name: EL
+    - name: CentOS
       versions:
         - 7
+    - name: RHEL
+      versions:
+        - 7
+    - name: Fedora
+      versions:
+        - 29
   galaxy_tags:
     - firewalld
     - firewall
@@ -19,4 +25,5 @@ galaxy_info:
     - centos7
     - rhel
     - rhel7
+    - fedora
 dependencies: []
