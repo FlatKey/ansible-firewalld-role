@@ -66,6 +66,14 @@ The following variables are used to define a service rule:
 
 ---
 
+The following variables are used to purge undefined active service rules: 
+
+```
+    firewalld_purge_services: (optional, only values: true|false, default: false)
+```
+
+---
+
 The following variables are used to define a port rule: 
 
 ```
