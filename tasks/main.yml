@@ -21,7 +21,11 @@
   tags: firewalld
 
 - name: set firewalld zone interface
-  shell: if [[ "$(/bin/firewall-cmd --get-zone-of-interface=enp4s0)" != "public" ]]; then /bin/firewall-cmd --zone={{ item.key }} --add-interface={{ item.value }} --permanent && echo "changed"; fi
+  shell: |
+    if [[ "$(/bin/firewall-cmd --get-zone-of-interface=enp4s0)" != "public" ]]
+    then
+      /bin/firewall-cmd --zone={{ item.key }} --add-interface={{ item.value }} --permanent && echo "changed"
+    fi
   with_dict: "{{ firewalld_zone_interface|default({}) }}"
   register: shell_result
   changed_when: shell_result.stdout | join('') is search('changed')
@@ -29,7 +33,12 @@
   tags: firewalld
 
 - name: set firewalld zone source
-  firewalld: zone={{ item.key }} permanent={{ item.value.permanent|default('true') }} immediate={{ item.value.immediate|default('true') }} state={{ item.value.state|default('enabled') }} source={{ item.value.source }}
+  firewalld:
+    zone: "{{ item.key }}"
+    permanent: "{{ item.value.permanent|default('true') }}"
+    immediate: "{{ item.value.immediate|default('true') }}"
+    state: "{{ item.value.state|default('enabled') }}"
+    source: "{{ item.value.source }}"
   with_dict: "{{ firewalld_zone_source|default({}) }}"
   tags: firewalld
 
@@ -40,22 +49,42 @@
   tags: firewalld
 
 - name: purge unconfigured firewalld service rules
-  firewalld: service={{ item }} permanent=true immediate=true state=disabled zone={{ default_zone|default('public') }}
+  firewalld:
+    service: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: disabled
+    zone: "{{ default_zone|default('public') }}"
   with_items: "{{ active_services.stdout_lines }}"
   when: firewalld_purge_services and item not in firewalld_service_rules
   tags: firewalld
 
 - name: set firewalld service rules
-  firewalld: service={{ item.key }} permanent={{ item.value.permanent|default('true') }} immediate={{ item.value.immediate|default('true') }} state={{ item.value.state|default('enabled') }} zone={{ item.value.zone|default('public') }}
+  firewalld:
+    service: "{{ item.key }}"
+    permanent: "{{ item.value.permanent|default('true') }}"
+    immediate: "{{ item.value.immediate|default('true') }}"
+    state: "{{ item.value.state|default('enabled') }}"
+    zone: "{{ item.value.zone|default('public') }}"
   with_dict: "{{ firewalld_service_rules|default({}) }}"
   tags: firewalld
 
 - name: set firewalld port rules
-  firewalld: port={{ item.value.port }}/{{ item.value.protocol|default('tcp') }} permanent={{ item.value.permanent|default('true') }} immediate={{ item.value.immediate|default('true') }} state={{ item.value.state|default('enabled') }} zone={{ item.value.zone|default('public') }}
+  firewalld:
+    port: "{{ item.value.port }}/{{ item.value.protocol|default('tcp') }}"
+    permanent: "{{ item.value.permanent|default('true') }}"
+    immediate: "{{ item.value.immediate|default('true') }}"
+    state: "{{ item.value.state|default('enabled') }}"
+    zone: "{{ item.value.zone|default('public') }}"
   with_dict: "{{ firewalld_port_rules|default({}) }}"
   tags: firewalld
 
 - name: set firewalld rich rules
-  firewalld: rich_rule={{ item.value.rule }} permanent={{ item.value.permanent|default('true') }} immediate={{ item.value.immediate|default('true') }} state={{ item.value.state|default('enabled') }} zone={{ item.value.zone|default('public') }}
+  firewalld:
+    rich_rule: "{{ item.value.rule }}"
+    permanent: "{{ item.value.permanent|default('true') }}"
+    immediate: "{{ item.value.immediate|default('true') }}"
+    state: "{{ item.value.state|default('enabled') }}"
+    zone: "{{ item.value.zone|default('public') }}"
   with_dict: "{{ firewalld_rich_rules|default({}) }}"
   tags: firewalld
