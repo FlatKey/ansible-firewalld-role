@@ -43,7 +43,9 @@
   tags: firewalld
 
 - name: get active firewalld service rules
-  shell: /bin/firewall-cmd --list-services | sed -e 's/ /\n/g'
+  shell: set -o pipefail; /bin/firewall-cmd --list-services | sed -e 's/ /\n/g'
+  args:
+    executable: /bin/bash
   register: active_services
   changed_when: false
   tags: firewalld
