@@ -7,7 +7,7 @@ Config options:
 * default zone
 * interface of a zone
 * source of a zone
-* service rules
+* service rules (with purging of undefined rules, if wanted)
 * port rules
 * rich rules
 
