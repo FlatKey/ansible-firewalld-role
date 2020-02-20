@@ -34,12 +34,14 @@
 
 - name: set firewalld zone source
   firewalld:
-    zone: "{{ item.key }}"
-    permanent: "{{ item.value.permanent|default('true') }}"
-    immediate: "{{ item.value.immediate|default('true') }}"
-    state: "{{ item.value.state|default('enabled') }}"
-    source: "{{ item.value.source }}"
-  with_dict: "{{ firewalld_zone_source|default({}) }}"
+    zone: "{{ item.0.name }}"
+    permanent: "{{ item.0.value.permanent|default('true') }}"
+    immediate: "{{ item.0.value.immediate|default('true') }}"
+    state: "{{ item.0.value.state|default('enabled') }}"
+    source: "{{ item.1 }}"
+  with_subelements:
+    - "{{ firewalld_zone_source|default({}) }}"
+    - "source"
   tags: firewalld
 
 - name: get active firewalld service rules
