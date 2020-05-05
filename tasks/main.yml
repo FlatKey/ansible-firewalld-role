@@ -63,7 +63,7 @@
 
 - name: set firewalld service rules
   firewalld:
-    service: "{{ item.key }}"
+    service: "{{ item.value.service | default(item.key) }}"
     permanent: "{{ item.value.permanent|default('true') }}"
     immediate: "{{ item.value.immediate|default('true') }}"
     state: "{{ item.value.state|default('enabled') }}"
