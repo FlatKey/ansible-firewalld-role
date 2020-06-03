@@ -31,15 +31,6 @@ The following variable is used to define the default zone of firewalld:
 
 ---
 
-The following variables are used to define the interface of a zone (multiple interfaces per zone possible, one interface per line):
-
-```
-    firewalld_zone_interface:
-      public: (required, e.g. eth0)
-```
-
----
-
 The following variables are used to define the source of a zone:
 
 ```
@@ -85,6 +76,21 @@ The following variables are used to define a port rule:
         zone: (optional, default: public)
         permanent: (optional, only values: true|false, default: true)
         immediate: (optional, only values: true|false, default: true)
+```
+
+---
+
+The following variables are used to define which interfaces assigned to zones:
+
+```
+    firewalld_zone_interfaces:
+      - name: trusted
+        interfaces:
+          - eth1
+          - eth2
+      - name: public
+        interfaces:
+          - eth0
 ```
 
 ---
