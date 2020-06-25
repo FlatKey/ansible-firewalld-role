@@ -71,7 +71,7 @@
 
 - name: purge unconfigured firewalld port rules
   firewalld:
-    service: "{{ item }}"
+    port: "{{ item }}"
     permanent: true
     immediate: true
     state: disabled
