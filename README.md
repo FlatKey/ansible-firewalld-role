@@ -31,6 +31,28 @@ The following variable is used to define the default zone of firewalld:
 
 ---
 
+The following variables are used to define which interfaces assigned to zones:
+
+```
+    firewalld_zone_interfaces:
+      - name: (required, e.g. public)
+        interfaces: (required, list of interfaces, one or multiple possible)
+```
+
+Example:
+```
+    firewalld_zone_interfaces:
+      - name: trusted
+        interfaces:
+          - eth1
+          - eth2
+      - name: public
+        interfaces:
+          - eth0
+```
+
+---
+
 The following variables are used to define the source of a zone:
 
 ```
@@ -48,11 +70,34 @@ The following variables are used to define a service rule:
 
 ```
     firewalld_service_rules: 
-      service:
+      name:
+        service: (optional, default: use name if service is not defined)
         state: (optional, only values: enabled|disabled, default: enabled)
         zone: (optional, default: public) 
         permanent: (optional, only values: true|false, default: true)
         immediate: (optional, only values: true|false, default: true)
+```
+
+Examples:
+```
+    firewalld_service_rules: 
+      ssh:
+        state: enabled
+        zone: public
+        permanent: true
+        immediate: true
+```
+or
+```
+    firewalld_service_rules:
+        ssh_trusted:
+            service: ssh
+            state: enabled
+            zone: trusted
+        ssh_public:
+            service: ssh
+            state: enabled
+            zone: public
 ```
 
 ---
@@ -76,21 +121,6 @@ The following variables are used to define a port rule:
         zone: (optional, default: public)
         permanent: (optional, only values: true|false, default: true)
         immediate: (optional, only values: true|false, default: true)
-```
-
----
-
-The following variables are used to define which interfaces assigned to zones:
-
-```
-    firewalld_zone_interfaces:
-      - name: trusted
-        interfaces:
-          - eth1
-          - eth2
-      - name: public
-        interfaces:
-          - eth0
 ```
 
 ---
