@@ -34,7 +34,7 @@
 
 - name: set firewalld zone source
   firewalld:
-    zone: "{{ item.0.name }}"
+    zone: "{{ item.0.zone }}"
     permanent: "{{ item.0.value.permanent|default('true') }}"
     immediate: "{{ item.0.value.immediate|default('true') }}"
     state: "{{ item.0.value.state|default('enabled') }}"
