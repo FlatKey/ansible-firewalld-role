@@ -92,7 +92,7 @@ The following variables are used to define a port rule:
 The following variables are used to define a rich rule:
 
 ```
-    firewalld_rich_rules:
+    firewalld_rich_rules: 
       name:
         rule: (required, a complete rule in firewalld rich language)
         state: (optional, only values: enabled|disabled, default: enabled)
