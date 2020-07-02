@@ -26,7 +26,7 @@ Role Variables
 The following variable is used to define the default zone of firewalld:
 
 ```
-    firewalld_default_zone: (optional, default: public)
+    default_zone: (optional, default: public)
 ```
 
 ---
@@ -119,7 +119,7 @@ Example Playbook
       roles:
         - ansible-firewalld-role
       vars:
-        firewalld_default_zone: public
+        default_zone: public
         firewalld_zone_interface:
           public: eth0
           internal: eth1
