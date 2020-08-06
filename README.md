@@ -36,7 +36,8 @@ The following variables are used to define the source of a zone:
 ```
     firewalld_zone_source:
       public:
-        source: (required, e.g. "192.168.1.0/24")
+        source: 
+         - (required, e.g. "192.168.1.0/24")
         state: (optional, only values: enabled|disabled, default: enabled)
         permanent: (optional, only values: true|false, default: true)
         immediate: (optional, only values: true|false, default: true)
@@ -131,8 +132,10 @@ Example Playbook
           internal: eth1
           internal: eth2
         firewalld_zone_source:
-          trusted:
-            source: "192.168.1.0/24"
+          - name: trusted
+            source: 
+              - 192.168.1.0/24
+              - 192.168.2.0/24
             state: enabled
             permanent: true
             immediate: true
