@@ -37,9 +37,9 @@
 - name: set firewalld zone source
   firewalld:
     zone: "{{ item.0.zone }}"
-    permanent: "{{ item.0.value.permanent|default('true') }}"
-    immediate: "{{ item.0.value.immediate|default('true') }}"
-    state: "{{ item.0.value.state|default('enabled') }}"
+    permanent: "{{ item.0.permanent|default('true') }}"
+    immediate: "{{ item.0.immediate|default('true') }}"
+    state: "{{ item.0.state|default('enabled') }}"
     source: "{{ item.1 }}"
   with_subelements:
     - "{{ firewalld_zone_source|default({}) }}"
