@@ -14,13 +14,13 @@ Config options:
 Requirements
 ------------
 
-Tested on RHEL 7, CentOS 7 and Fedora 29 only. 
+Tested on RHEL 7, CentOS 7 and Fedora 29 only.
 
-Ansible 2.0 or above 
+Ansible 2.0 or above
 
 Role Variables
 --------------
-**It is not necessary to use all these variable blocks, you can use only the config options you really need.** 
+**It is not necessary to use all these variable blocks, you can use only the config options you really need.**
 
 
 The following variable is used to define the default zone of firewalld:
@@ -67,14 +67,14 @@ The following variables are used to define the source of a zone:
 
 ---
 
-The following variables are used to define a service rule: 
+The following variables are used to define a service rule:
 
 ```
     firewalld_service_rules: 
       name:
         service: (optional, default: use name if service is not defined)
         state: (optional, only values: enabled|disabled, default: enabled)
-        zone: (optional, default: public) 
+        zone: (optional, default: public)
         permanent: (optional, only values: true|false, default: true)
         immediate: (optional, only values: true|false, default: true)
 ```
@@ -103,7 +103,7 @@ or
 
 ---
 
-The following variables are used to purge undefined active service rules: 
+The following variables are used to purge undefined active service rules:
 
 ```
     firewalld_purge_services: (optional, only values: true|false, default: false)
@@ -111,10 +111,10 @@ The following variables are used to purge undefined active service rules:
 
 ---
 
-The following variables are used to define a port rule: 
+The following variables are used to define a port rule:
 
 ```
-    firewalld_port_rules: 
+    firewalld_port_rules:
       name:
         port: (required, port or port range)
         protocol: (optional, only values: tcp|udp, default: tcp)
@@ -126,7 +126,7 @@ The following variables are used to define a port rule:
 
 ---
 
-The following variables are used to define a rich rule: 
+The following variables are used to define a rich rule:
 
 ```
     firewalld_rich_rules: 
@@ -198,4 +198,3 @@ License
 -------
 
 MIT
-

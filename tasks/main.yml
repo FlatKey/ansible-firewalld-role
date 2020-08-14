@@ -65,6 +65,25 @@
   when: firewalld_purge_services and item not in firewalld_service_rules
   tags: firewalld
 
+- name: get active firewalld port rules
+  shell: set -o pipefail; /bin/firewall-cmd --list-ports | sed -e 's/ /\n/g'
+  args:
+    executable: /bin/bash
+  register: active_ports
+  changed_when: false
+  tags: firewalld
+
+- name: purge unconfigured firewalld port rules
+  firewalld:
+    port: "{{ item }}"
+    permanent: true
+    immediate: true
+    state: disabled
+    zone: "{{ default_zone|default('public') }}"
+  with_items: "{{ active_ports.stdout_lines }}"
+  when: firewalld_purge_services and item not in firewalld_service_rules
+  tags: firewalld
+
 - name: set firewalld service rules
   firewalld:
     service: "{{ item.value.service | default(item.key) }}"
