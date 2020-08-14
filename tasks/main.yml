@@ -81,7 +81,7 @@
     state: disabled
     zone: "{{ default_zone|default('public') }}"
   with_items: "{{ active_ports.stdout_lines }}"
-  when: firewalld_purge_services and item not in firewalld_service_rules
+  when: firewalld_purge_ports and item not in firewalld_port_rules
   tags: firewalld
 
 - name: set firewalld service rules
