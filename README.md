@@ -8,7 +8,7 @@ Config options:
 * interface of a zone
 * source of a zone
 * service rules (with purging of undefined rules, if wanted)
-* port rules
+* port rules (with purging of undefined rules, if wanted)
 * rich rules
 
 Requirements
@@ -126,6 +126,14 @@ The following variables are used to define a port rule:
 
 ---
 
+The following variables are used to purge undefined active port rules:
+
+```
+    firewalld_purge_ports: (optional, only values: true|false, default: false)
+```
+
+---
+
 The following variables are used to define a rich rule:
 
 ```
@@ -192,6 +200,7 @@ Example Playbook
             permanent: true
             immediate: true
         firewalld_purge_services: true
+        firewalld_purge_ports: true
 ```
 
 License
