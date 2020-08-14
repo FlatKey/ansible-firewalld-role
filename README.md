@@ -31,11 +31,24 @@ The following variable is used to define the default zone of firewalld:
 
 ---
 
-The following variables are used to define the interface of a zone (multiple interfaces per zone possible, one interface per line):
+The following variables are used to define which interfaces assigned to zones:
 
 ```
-    firewalld_zone_interface:
-      public: (required, e.g. eth0)
+    firewalld_zone_interfaces:
+      - name: (required, e.g. public)
+        interfaces: (required, list of interfaces, one or multiple possible)
+```
+
+Example:
+```
+    firewalld_zone_interfaces:
+      - name: trusted
+        interfaces:
+          - eth1
+          - eth2
+      - name: public
+        interfaces:
+          - eth0
 ```
 
 ---
@@ -45,7 +58,8 @@ The following variables are used to define the source of a zone:
 ```
     firewalld_zone_source:
       public:
-        source: (required, e.g. "192.168.1.0/24")
+        zone: (required, zone name)
+        source: (required, array of sources e.g. [ 192.168.1.1/24, 10.16.16.23 ])
         state: (optional, only values: enabled|disabled, default: enabled)
         permanent: (optional, only values: true|false, default: true)
         immediate: (optional, only values: true|false, default: true)
@@ -56,12 +70,35 @@ The following variables are used to define the source of a zone:
 The following variables are used to define a service rule:
 
 ```
-    firewalld_service_rules:
-      service:
+    firewalld_service_rules: 
+      name:
+        service: (optional, default: use name if service is not defined)
         state: (optional, only values: enabled|disabled, default: enabled)
         zone: (optional, default: public)
         permanent: (optional, only values: true|false, default: true)
         immediate: (optional, only values: true|false, default: true)
+```
+
+Examples:
+```
+    firewalld_service_rules: 
+      ssh:
+        state: enabled
+        zone: public
+        permanent: true
+        immediate: true
+```
+or
+```
+    firewalld_service_rules:
+        ssh_trusted:
+            service: ssh
+            state: enabled
+            zone: trusted
+        ssh_public:
+            service: ssh
+            state: enabled
+            zone: public
 ```
 
 ---
@@ -126,7 +163,10 @@ Example Playbook
           internal: eth2
         firewalld_zone_source:
           trusted:
-            source: "192.168.1.0/24"
+            zone: trusted
+            source:
+              - "192.168.1.0/24"
+              - "10.0.16.12"
             state: enabled
             permanent: true
             immediate: true

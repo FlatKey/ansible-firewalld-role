@@ -20,13 +20,15 @@
   changed_when: result.stdout == "success"
   tags: firewalld
 
-- name: set firewalld zone interface
+- name: set firewalld zone interfaces
   shell: |
-    if [[ "$(/bin/firewall-cmd --get-zone-of-interface={{ item.value }})" != "{{ item.key }}" ]]
+    if [[ "$(/bin/firewall-cmd --get-zone-of-interface={{ item.1 }})" != "{{ item.0.name }}" ]]
     then
-      /bin/firewall-cmd --zone={{ item.key }} --add-interface={{ item.value }} --permanent && echo "changed"
+      /bin/firewall-cmd --zone={{ item.0.name }} --add-interface={{ item.1 }} --permanent && echo "changed"
     fi
-  with_dict: "{{ firewalld_zone_interface|default({}) }}"
+  with_subelements: 
+    - "{{ firewalld_zone_interfaces|default([]) }}"
+    - interfaces
   register: shell_result
   changed_when: shell_result.stdout | join('') is search('changed')
   notify: restart firewalld
@@ -34,12 +36,14 @@
 
 - name: set firewalld zone source
   firewalld:
-    zone: "{{ item.key }}"
-    permanent: "{{ item.value.permanent|default('true') }}"
-    immediate: "{{ item.value.immediate|default('true') }}"
-    state: "{{ item.value.state|default('enabled') }}"
-    source: "{{ item.value.source }}"
-  with_dict: "{{ firewalld_zone_source|default({}) }}"
+    zone: "{{ item.0.zone }}"
+    permanent: "{{ item.0.permanent|default('true') }}"
+    immediate: "{{ item.0.immediate|default('true') }}"
+    state: "{{ item.0.state|default('enabled') }}"
+    source: "{{ item.1 }}"
+  with_subelements:
+    - "{{ firewalld_zone_source|default({}) }}"
+    - "source"
   tags: firewalld
 
 - name: get active firewalld service rules
@@ -82,7 +86,7 @@
 
 - name: set firewalld service rules
   firewalld:
-    service: "{{ item.key }}"
+    service: "{{ item.value.service | default(item.key) }}"
     permanent: "{{ item.value.permanent|default('true') }}"
     immediate: "{{ item.value.immediate|default('true') }}"
     state: "{{ item.value.state|default('enabled') }}"
