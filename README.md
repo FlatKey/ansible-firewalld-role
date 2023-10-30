@@ -103,10 +103,11 @@ or
 
 ---
 
-The following variables are used to purge undefined active service rules:
+The following variables are used to purge undefined active service and port rules:
 
 ```
     firewalld_purge_services: (optional, only values: true|false, default: false)
+    firewalld_purge_ports: (optional, only values: true|false, default: false)
 ```
 
 ---
@@ -157,10 +158,14 @@ Example Playbook
         - ansible-firewalld-role
       vars:
         default_zone: public
-        firewalld_zone_interface:
-          public: eth0
-          internal: eth1
-          internal: eth2
+        firewalld_zone_interfaces:
+          - name: trusted
+            interfaces:
+              - eth1
+              - eth2
+          - name: public
+            interfaces:
+              - eth0
         firewalld_zone_source:
           trusted:
             zone: trusted
@@ -192,6 +197,7 @@ Example Playbook
             permanent: true
             immediate: true
         firewalld_purge_services: true
+        firewalld_purge_ports: true
 ```
 
 License
