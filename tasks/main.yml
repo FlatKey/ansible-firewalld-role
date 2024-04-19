@@ -46,6 +46,8 @@
   shell: set -o pipefail; /bin/firewall-cmd --permanent --new-ipset={{ item }} --type=hash:ip
   args:
     executable: /bin/bash
+  register: created_ipsets
+  become: true
   when:
   - item not in active_ipsets.stdout | split
   - firewalld_ipsets is defined
@@ -73,9 +75,21 @@
   shell: set -o pipefail; /bin/firewall-cmd --permanent --ipset={{ item.0.name }} --add-entry={{ item.1 }}
   args:
     executable: /bin/bash
+  register: created_entries
+  become: true
   when:
   - firewalld_ipsets is defined
+  changed_when: created_entries.stderr is not search('.*ALREADY_ENABLED.*')
   loop: "{{ lookup('subelements', firewalld_ipsets, 'entries', {'skip_missing': True}) }}"
+
+- name: reload firewalld as ipsets can only be added as permanent
+  shell: /bin/firewall-cmd --reload
+  args:
+    executable: /bin/bash
+  become: true
+  when:
+  - created_ipsets is changed
+  - created_entries is changed
 
 - name: set firewalld zone source
   firewalld:
