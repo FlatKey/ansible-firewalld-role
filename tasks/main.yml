@@ -50,8 +50,8 @@
   register: created_ipsets
   become: true
   when:
-  - item not in active_ipsets.stdout | split
   - firewalld_ipsets is defined
+  - item not in active_ipsets.stdout | split
   loop: "{{ firewalld_ipsets | map(attribute='name') | list }}"
 
 - name: get ipset entries
