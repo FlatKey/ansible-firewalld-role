@@ -34,6 +34,63 @@
   notify: restart firewalld
   tags: firewalld
 
+- name: get active ipsets 
+  shell: set -o pipefail; /bin/firewall-cmd --permanent --get-ipsets
+  args:
+    executable: /bin/bash
+  register: active_ipsets
+  changed_when: false
+  when: firewalld_ipsets is defined
+
+- name: create any missing ipsets
+  shell: set -o pipefail; /bin/firewall-cmd --permanent --new-ipset={{ item }} --type=hash:ip
+  args:
+    executable: /bin/bash
+  register: created_ipsets
+  become: true
+  when:
+  - firewalld_ipsets is defined
+  - item not in active_ipsets.stdout | split
+  loop: "{{ firewalld_ipsets | map(attribute='name') | list }}"
+
+- name: get ipset entries
+  shell: set -o pipefail; /bin/firewall-cmd --permanent --ipset={{ item }} --get-entries
+  args:
+    executable: /bin/bash
+  register: ipset_entries
+  changed_when: false
+  when: firewalld_ipsets is defined
+  loop: "{{ firewalld_ipsets | map(attribute='name') | list }}"
+
+- name: remove ipset entries not defined in firewalld_ipsets
+  shell: set -o pipefail; /bin/firewall-cmd --permanent --ipset={{ item.0.item }} --remove-entry={{ item.1 }}
+  args:
+    executable: /bin/bash
+  when:
+  - firewalld_ipsets is defined
+  - item.1 not in (firewalld_ipsets | selectattr('name','equalto', item.0.item) | list)[0]['entries']
+  loop: "{{ lookup('subelements', ipset_entries.results, 'stdout_lines', {'skip_missing': True}) }}"
+
+- name: add ipset entries
+  shell: set -o pipefail; /bin/firewall-cmd --permanent --ipset={{ item.0.name }} --add-entry={{ item.1 }}
+  args:
+    executable: /bin/bash
+  register: created_entries
+  become: true
+  when:
+  - firewalld_ipsets is defined
+  changed_when: created_entries.stderr is not search('.*ALREADY_ENABLED.*')
+  loop: "{{ lookup('subelements', firewalld_ipsets, 'entries', {'skip_missing': True}) }}"
+
+- name: reload firewalld as ipsets can only be added as permanent
+  shell: /bin/firewall-cmd --reload
+  args:
+    executable: /bin/bash
+  become: true
+  when:
+  - created_ipsets is changed
+  - created_entries is changed
+
 - name: set firewalld zone source
   firewalld:
     zone: "{{ item.0.zone }}"

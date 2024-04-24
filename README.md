@@ -130,13 +130,26 @@ The following variables are used to define a port rule:
 The following variables are used to define a rich rule:
 
 ```
-    firewalld_rich_rules: 
+    firewalld_rich_rules:
       name:
         rule: (required, a complete rule in firewalld rich language)
         state: (optional, only values: enabled|disabled, default: enabled)
         zone: (optional, default: public)
         permanent: (optional, only values: true|false, default: true)
         immediate: (optional, only values: true|false, default: true)
+```
+The following variable is used to define ipsets. Only hash:ip type is supported.
+NOTE: ipsets created outside of this variable will not be managed or removed
+```
+    firewalld_ipsets:
+     - name: example1
+       entries:
+       - 192.168.0.1
+       - 192.168.0.5
+     - name: example2
+       entries:
+       - 192.168.0.7
+       - 192.168.0.11
 ```
 
 Handlers
@@ -196,6 +209,15 @@ Example Playbook
             zone: public
             permanent: true
             immediate: true
+        firewalld_ipsets:
+          - name: example1
+            entries:
+            - 192.168.0.1
+            - 192.168.0.5
+          - name: example2
+            entries:
+            - 192.168.0.7
+            - 192.168.0.11
         firewalld_purge_services: true
         firewalld_purge_ports: true
 ```
