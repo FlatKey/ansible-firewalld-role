@@ -18,6 +18,7 @@
   register: result
   when: defaultzone.stdout != default_zone | default('public')
   changed_when: result.stdout == "success"
+  notify: restart firewalld
   tags: firewalld
 
 - name: set firewalld zone interfaces
@@ -101,6 +102,7 @@
   with_subelements:
     - "{{ firewalld_zone_source|default({}) }}"
     - "source"
+  notify: restart firewalld
   tags: firewalld
 
 - name: get active firewalld service rules
