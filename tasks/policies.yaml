@@ -1,0 +1,88 @@
+---
+- name: Get firewalld policies
+  ansible.builtin.command:
+    cmd: >-
+      /bin/firewall-cmd --get-policies
+  register: result
+  changed_when: false
+
+- name: Create new firewalld policy
+  ansible.builtin.command:
+    cmd: >-
+      /bin/firewall-cmd --permanent --new-policy {{ policy.name }}
+  changed_when: true
+  when: policy.name not in result.stdout
+  notify: restart firewalld
+
+- name: Assemble firewalld policy configuration parameters
+  ansible.builtin.set_fact:
+    firewalld_cmd_policy_prefix: >-
+      /bin/firewall-cmd --permanent --policy {{ policy.name }}
+    set_description: >-
+      {% if policy.description | default('') | length > 0 %}
+      --set-description "{{ policy.description }}"
+      {% endif %}
+    set_target: >-
+      --set-target "{{ policy.target | default('REJECT') | upper }}"
+    add_policy_services: >-
+      {% for service in policy.services | default([]) %}
+      --add-service "{{ service }}"
+      {% endfor %}
+    add_policy_ports: >-
+      {% for port in policy.ports | default([]) %}
+      --add-port "{{ service }}"
+      {% endfor %}
+    add_policy_protocols: >-
+      {% for protocol in policy.protocols | default([]) %}
+      --add-protocol "{{ protocol }}"
+      {% endfor %}
+    add_policy_egress_zones: >-
+      {% for egress_zone in policy.egress_zones | default([]) %}
+      --add-egress-zone "{{ egress_zone }}"
+      {% endfor %}
+    add_policy_ingress_zones: >-
+      {% for ingress_zone in policy.ingress_zones | default([]) %}
+      --add-ingress-zone "{{ ingress_zone }}"
+      {% endfor %}
+    add_policy_forward_ports: >-
+      {% for forward_port in policy.forward_ports | default([]) %}
+      --add-forward-port "{{ forward_port }}"
+      {% endfor %}
+    add_policy_source_ports: >-
+      {% for source_port in policy.source_ports | default([]) %}
+      --add-source-port "{{ source_port }}"
+      {% endfor %}
+    add_policy_icmp_blocks: >-
+      {% for icmp_block in policy.icmp_blocks | default([]) %}
+      --add-icmp-block "{{ icmp_block }}"
+      {% endfor %}
+    add_policy_rich_rules: >-
+      {% for rich_rule in policy.rich_rules | default([]) %}
+      --add-rich-rule "{{ rich_rule }}"
+      {% endfor %}
+    add_policy_masquerade: >-
+      {% if policy.masquerade | default(false) | bool %}
+      --add-masquerade
+      {% endif %}
+  loop: "{{ firewalld_policies }}"
+
+- name: Configure firewalld policies
+  ansible.builtin.command:
+    cmd: "{{ firewalld_cmd }}"
+  register: result
+  changed_when: result.stdout == "success"
+  loop:
+    - "{{ firewalld_cmd_policy_prefix }} {{ set_description }}"
+    - "{{ firewalld_cmd_policy_prefix }} {{ set_target }}"
+    - "{{ firewalld_cmd_policy_prefix }} {{ add_policy_services }}"
+    - "{{ firewalld_cmd_policy_prefix }} {{ add_policy_ports }}"
+    - "{{ firewalld_cmd_policy_prefix }} {{ add_policy_protocols }}"
+    - "{{ firewalld_cmd_policy_prefix }} {{ add_policy_egress_zones }}"
+    - "{{ firewalld_cmd_policy_prefix }} {{ add_policy_ingress_zones }}"
+    - "{{ firewalld_cmd_policy_prefix }} {{ add_policy_forward_ports }}"
+    - "{{ firewalld_cmd_policy_prefix }} {{ add_policy_source_ports }}"
+    - "{{ firewalld_cmd_policy_prefix }} {{ add_policy_icmp_blocks }}"
+    - "{{ firewalld_cmd_policy_prefix }} {{ add_policy_rich_rules }}"
+    - "{{ firewalld_cmd_policy_prefix }} {{ add_policy_masquerade }}"
+  loop_control:
+    loop_var: firewalld_cmd

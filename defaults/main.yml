@@ -1,3 +1,4 @@
 ---
 firewalld_purge_services: false
 firewalld_purge_ports: false
+firewalld_policies: []
