@@ -10,6 +10,7 @@ Config options:
 * service rules (with purging of undefined rules, if wanted)
 * port rules
 * rich rules
+* policies
 
 Requirements
 ------------
@@ -152,6 +153,24 @@ NOTE: ipsets created outside of this variable will not be managed or removed
        - 192.168.0.11
 ```
 
+The following variable is used to configure policies:
+```
+    firewalld_policies:
+      - name: (required)
+        description (optional, default: "")
+        target: (optional, only values: "ACCEPT"|"REJECT", default: "REJECT")
+        services: (optional, default: [])
+        ports: (optional, default: [])
+        protocols: (optional, default: [])
+        egress_zones: (optional, default: [])
+        ingress_zones: (optional, default: [])
+        forward_ports: (optional, default: [])
+        source_ports: (optional, default: [])
+        icmp_blocks: (optional, default: [])
+        rich_rules: (optional, default: [])
+        masquerade: (optional, only values: true|false, default: false)
+```
+
 Handlers
 --------
 
@@ -218,6 +237,9 @@ Example Playbook
             entries:
             - 192.168.0.7
             - 192.168.0.11
+        firewalld_policies:
+          - name: libvirt-to-host
+            target: ACCEPT
         firewalld_purge_services: true
         firewalld_purge_ports: true
 ```

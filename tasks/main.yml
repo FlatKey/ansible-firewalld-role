@@ -172,3 +172,10 @@
     zone: "{{ item.value.zone|default('public') }}"
   with_dict: "{{ firewalld_rich_rules|default({}) }}"
   tags: firewalld
+
+- name: Configure firewalld policies
+  include_tasks: policies.yaml
+  loop: "{{ firewalld_policies }}"
+  loop_control:
+    loop_var: policy
+  tags: firewalld
